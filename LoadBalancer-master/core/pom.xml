@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>load-balancer</artifactId>
+        <groupId>xyz.homapay.hampay.balancer</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>balancer-core</artifactId>
+    <packaging>mule</packaging>
+
+
+    <repositories>
+        <repository>
+            <id>mulesoft-releases</id>
+            <name>MuleSoft Repository</name>
+            <url>https://repository-master.mulesoft.org/releases/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>mulesoft-snapshots</id>
+            <name>MuleSoft Snapshot Repository</name>
+            <url>https://repository-master.mulesoft.org/snapshots/</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>muleforge-repo</id>
+            <name>MuleForge Repository</name>
+            <url>https://repository.mulesoft.org/nexus/content/repositories/releases</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>mule-deps</id>
+            <name>Codehaus Repository</name>
+            <url>http://dist.codehaus.org/mule/dependencies/maven2</url>
+            <layout>default</layout>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>http://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>apache-plugin-snapshots</id>
+            <name>Apache Maven Plugins Snapshot Repository</name>
+            <url>http://people.apache.org/maven-snapshot-repository</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>xyz.homapay.hampay.common</groupId>
+            <artifactId>common-load-balancer</artifactId>
+            <version>${hampay.common.loadbalancer.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mule</groupId>
+            <artifactId>mule-core</artifactId>
+            <version>${mule.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-spring-config</artifactId>
+            <version>${mule.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mule.transports</groupId>
+            <artifactId>mule-transport-amqp</artifactId>
+            <version>${mule.transport.amqp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit-dep</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>${mongo.java.driver.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb.morphia</groupId>
+            <artifactId>morphia</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+
+
+        <!-- TEST deps -->
+
+        <dependency>
+            <groupId>org.mule.munit</groupId>
+            <artifactId>munit-common</artifactId>
+            <version>${munit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mule.modules</groupId>
+            <artifactId>mule-module-json</artifactId>
+            <version>${mule.test.version}</version>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <finalName>hampay-load-balancer-${project.version}</finalName>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src/main/app</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/munit</directory>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+            <testResource>
+                <directory>src/main/app</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+            <testResource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </testResource>
+        </testResources>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.mule.tools</groupId>
+                <artifactId>maven-mule-plugin</artifactId>
+                <version>1.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <inclusions>
+                        <inclusion>
+                            <groupId>org.mule.transports</groupId>
+                            <artifactId>mule-transport-amqp</artifactId>
+                        </inclusion>
+                        <inclusion>
+                            <groupId>com.rabbitmq</groupId>
+                            <artifactId>amqp-client</artifactId>
+                        </inclusion>
+                    </inclusions>
+                    <copyToAppsDirectory>true</copyToAppsDirectory>
+                    <outputDirectory>${env.MULE_HOME}/apps</outputDirectory>
+                    <!--<outputDirectory>${project.build.directory}</outputDirectory>-->
+                </configuration>
+            </plugin>
+
+
+        </plugins>
+    </build>
+
+
+    <properties>
+        <mule.version>3.5.0</mule.version>
+        <hampay.common.loadbalancer.version>1.0.0-SNAPSHOT</hampay.common.loadbalancer.version>
+        <mule.transport.amqp.version>3.3.0</mule.transport.amqp.version>
+        <mule.module.mongo.version>RELEASE</mule.module.mongo.version>
+        <junit.version>4.11</junit.version>
+        <mongo.java.driver.version>2.13.0-rc2</mongo.java.driver.version>
+        <munit.version>3.5-M3-SNAPSHOT</munit.version>
+        <mule.test.version>3.5.4-SNAPSHOT</mule.test.version>
+
+    </properties>
+
+</project>

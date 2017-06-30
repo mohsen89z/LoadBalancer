@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:amqp="http://www.mulesoft.org/schema/mule/amqp"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.5/mule.xsd
+      http://www.mulesoft.org/schema/mule/amqp http://www.mulesoft.org/schema/mule/amqp/3.3/mule-amqp.xsd">
+
+    <amqp:connector name="amqpRabbitMQConnector" host="${rabbitmq.host}" username="${rabbitmq.username}" password="${rabbitmq.password}" activeDeclarationsOnly="true"  >
+        <reconnect-forever frequency="5000" blocking="false" />
+    </amqp:connector>
+
+
+
+</mule>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.5/mule.xsd
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <spring:bean id="loadBalancerService"
+                 class="xyz.homapay.hampay.balancer.service.LoadBalancerService"/>
+    <spring:bean id="requestMessageBuilderService" class="xyz.homapay.hampay.balancer.service.RequestMessageBuilderService" />
+
+</mule>

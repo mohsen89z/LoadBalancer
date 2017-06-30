@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:amqp="http://www.mulesoft.org/schema/mule/amqp"
+      xsi:schemaLocation="
+      http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/3.5/mule.xsd
+      http://www.mulesoft.org/schema/mule/amqp http://www.mulesoft.org/schema/mule/amqp/3.3/mule-amqp.xsd">
+
+    <flow name="TransactionListenerFlow">
+        <amqp:inbound-endpoint connector-ref="amqpRabbitMQConnector" queueName="${queue.transactionLog}"
+                               exchange-pattern="one-way"/>
+        <byte-array-to-string-transformer/>
+        <transformer ref="JsonToTransactionLog"/>
+        <invoke object-ref="loadBalancerService" method="decideWhichPayment"
+                methodArguments="#[payload]"/>
+        <invoke object-ref="requestMessageBuilderService" method="buildMessage"
+                methodArguments="#[payload]" />
+
+        <amqp:outbound-endpoint connector-ref="amqpRabbitMQConnector"
+                                exchangeName="${exchange.balancer.transferRequest}"
+                                exchangeType="topic"
+                                exchangeDurable="true"
+                                routingKey="${core.balancer.req.key}"
+
+                                />
+
+    </flow>
+
+</mule>
